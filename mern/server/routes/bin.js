@@ -21,11 +21,30 @@ router.get("/", async (req, res) => {
 // This section will help you get a single bin by id
 router.get("/:id", async (req, res) => {
     let collection = await db.collection("Bins");
-    let query = { _id: new ObjectId(req.params.id) };
+    // let query = { _id: new ObjectId(req.params.id) };
+    let query = { _id: req.params.id };
     let result = await collection.findOne(query);
   
     if (!result) res.send("Not found").status(404);
     else res.send(result).status(200);
+});
+
+// This section will help you create a new bin.
+router.post("/", async (req, res) => {
+    try {
+      let newDocument = {
+        _id: req.body.id,
+        sku: req.body.sku,
+        itemName: req.body.itemName,
+        quantity: req.body.quantity,
+      };
+      let collection = await db.collection("Bins");
+      let result = await collection.insertOne(newDocument);
+      res.send(result).status(204);
+    } catch (err) {
+      console.error(err);
+      res.status(500).send("Error adding bin");
+    }
 });
 
 export default router;
