@@ -19,7 +19,7 @@ router.get("/", async (req, res) => {
 });
 
 // This section will help you get a single bin by id
-router.get("/:id", async (req, res) => {
+router.get("/id/:id", async (req, res) => {
     let collection = await db.collection("Bins");
     // let query = { _id: new ObjectId(req.params.id) };
     let query = { _id: req.params.id };
@@ -27,6 +27,18 @@ router.get("/:id", async (req, res) => {
   
     if (!result) res.send("Not found").status(404);
     else res.send(result).status(200);
+});
+
+// Find all bins containing an SKU
+// return an array of bin ids
+router.get("/sku/:sku", async (req, res) => {
+    let collection = await db.collection("Bins");
+    let query = { sku: req.params.sku };
+
+    let results = await collection.find(query).toArray();
+
+    if (!results) res.send("Bins not found").status(404);
+    else res.send(results).status(200);
 });
 
 // This section will help you create a new bin.

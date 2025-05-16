@@ -37,16 +37,15 @@ router.get("/", async (req, res) => {
     const cleanedOrders = [];
 
     for (const order of ordersNode) {
-        console.log(order.id);
 
         const cleanedOrder = {};
         cleanedOrder.id = order.id;
+        cleanedOrder.name = order.name;
 
         const lineItemsNode = order.line_items;
         const cleanedLineItems = [];
 
         for (const lineItem of lineItemsNode) {
-            console.log(lineItem.name);
             const cleanedLineItem = {};
             cleanedLineItem.name = lineItem.name;
             cleanedLineItem.sku = lineItem.sku;
@@ -61,6 +60,13 @@ router.get("/", async (req, res) => {
     res.send(cleanedOrders).status(200);
 
 });
+
+/*
+// get a list of the required bins based on order id
+router.get("/:orderId", async (req, res) => {
+
+});
+*/
 
 // taking an order will close the order in Shopify, preventing it from showing up in the list of orders
 
