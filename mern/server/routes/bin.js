@@ -6,6 +6,8 @@ import db from "../db/connection.js";
 // This help convert the id from string to ObjectId for the _id.
 import { ObjectId } from "mongodb";
 
+import { findBinsBySku } from "../controllers/binController.js";
+
 // router is an instance of the express router.
 // We use it to define our routes.
 // The router will be added as a middleware and will take control of requests starting with path /record.
@@ -32,10 +34,8 @@ router.get("/id/:id", async (req, res) => {
 // Find all bins containing an SKU
 // return an array of bin ids
 router.get("/sku/:sku", async (req, res) => {
-    let collection = await db.collection("Bins");
-    let query = { sku: req.params.sku };
 
-    let results = await collection.find(query).toArray();
+    let results = await findBinsBySku(db, req.params.sku);
 
     if (!results) res.send("Bins not found").status(404);
     else res.send(results).status(200);
