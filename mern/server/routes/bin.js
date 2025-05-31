@@ -6,7 +6,7 @@ import db from "../db/connection.js";
 // This help convert the id from string to ObjectId for the _id.
 import { ObjectId } from "mongodb";
 
-import { findBinsBySku } from "../controllers/binController.js";
+import { findBinsBySku, recommendBins } from "../controllers/binController.js";
 
 // router is an instance of the express router.
 // We use it to define our routes.
@@ -58,5 +58,14 @@ router.post("/", async (req, res) => {
       res.status(500).send("Error adding bin");
     }
 });
+
+// get a list of bin suggestions given an SKU to stock
+router.get("/suggestions/:sku", async (req, res) => {
+    let results = await recommendBins(db, req.params.sku);
+
+    if (!results) res.send("Bins not found").status(404);
+    else res.send(results).status(200);
+});
+
 
 export default router;
